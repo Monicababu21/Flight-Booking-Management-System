@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Booking Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container nav-container">
+            <div class="logo">
+                <h2>✈️ AeroLink Flights</h2>
+            </div>
+            <nav class="nav">
+                <a href="#home" class="nav-link active" onclick="showSection('home')">Home</a>
+                <a href="#search-section" class="nav-link" onclick="showSection('search')">Search Flights</a>
+                <a href="#manage-bookings" class="nav-link" onclick="showSection('bookings')">Bookings</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero & Flight Search Form Section -->
+        <section id="search-section" class="hero-section">
+            <div class="container">
+                <div class="hero-text">
+                    <h1>Book & Manage Domestic & International Flights</h1>
+                    <p>Compare competitive airlines, choose your cabin class, and confirm in seconds.</p>
+                </div>
+
+                <div class="search-card">
+                    <h3>Find Flights</h3>
+                    <form id="flightSearchForm" class="search-form">
+                        <div class="form-group">
+                            <label for="fromAirport">From</label>
+                            <select id="fromAirport" required>
+                                <option value="">Select Origin</option>
+                                <option value="New York (JFK)">New York (JFK)</option>
+                                <option value="London (LHR)">London (LHR)</option>
+                                <option value="San Francisco (SFO)">San Francisco (SFO)</option>
+                                <option value="Dubai (DXB)">Dubai (DXB)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="toAirport">To</label>
+                            <select id="toAirport" required>
+                                <option value="">Select Destination</option>
+                                <option value="London (LHR)">London (LHR)</option>
+                                <option value="New York (JFK)">New York (JFK)</option>
+                                <option value="San Francisco (SFO)">San Francisco (SFO)</option>
+                                <option value="Dubai (DXB)">Dubai (DXB)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="departureDate">Departure Date</label>
+                            <input type="date" id="departureDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="passengerCount">Passengers</label>
+                            <input type="number" id="passengerCount" min="1" max="9" value="1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cabinClass">Class</label>
+                            <select id="cabinClass" required>
+                                <option value="Economy">Economy</option>
+                                <option value="Business">Business</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group btn-group">
+                            <button type="submit" class="btn btn-primary">Search Flights</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notification Bar -->
+        <div class="container">
+            <div id="alertBox" class="alert d-none"></div>
+        </div>
+
+        <!-- Flight Search Results Section -->
+        <section id="resultsSection" class="results-section d-none">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Available Flights</h2>
+                    <p id="searchSummary">Showing real-time airline flight schedules</p>
+                </div>
+                <div id="flightList" class="flight-grid">
+                    <!-- Populated dynamically via script.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Booking Modal Form -->
+        <div id="bookingModal" class="modal d-none">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeBookingModal()">&times;</span>
+                <h3>Passenger & Contact Details</h3>
+                <div id="modalFlightSummary" class="selected-flight-summary">
+                    <!-- Flight info inserted dynamically -->
+                </div>
+
+                <form id="passengerBookingForm" class="booking-form">
+                    <div class="form-group">
+                        <label for="custName">Primary Passenger Name</label>
+                        <input type="text" id="custName" placeholder="Full name as on passport/ID" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custEmail">Email Address</label>
+                        <input type="email" id="custEmail" placeholder="e.g. passenger@airmail.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="custPhone">Phone Number</label>
+                        <input type="tel" id="custPhone" placeholder="e.g. +1 555-0199" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modalPassengers">Number of Passengers</label>
+                        <input type="number" id="modalPassengers" min="1" max="9" value="1" required>
+                    </div>
+
+                    <div class="price-breakdown">
+                        <p>Total Amount: <strong id="modalTotalPrice">$0</strong></p>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Booking Confirmation Section -->
+        <section id="confirmationSection" class="confirmation-section d-none">
+            <div class="container">
+                <div class="confirmation-card">
+                    <div class="success-badge">✓ E-Ticket Confirmed</div>
+                    <h2>Boarding Pass Issued!</h2>
+                    <p>Your electronic flight ticket is confirmed. You can view or cancel it under Bookings.</p>
+
+                    <div id="confirmationDetails" class="ticket-details">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="showSection('bookings')">Go to Manage Bookings</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Manage Bookings Section -->
+        <section id="bookingsSection" class="bookings-section d-none">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Manage Flight Bookings</h2>
+                    <p>View your upcoming flights and e-tickets</p>
+                </div>
+
+                <div id="bookingsList" class="bookings-list-container">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 Flight Booking Management System. Web Technology Project.</p>
+            <p>Reliable airline ticketing, automated e-ticket validation & passenger management.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
